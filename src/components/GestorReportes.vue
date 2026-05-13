@@ -20,7 +20,7 @@ const formularioAlerta = ref({
 const cargarReportes = async () => {
   try {
     cargando.value = true;
-    const respuesta = await axios.get('http://localhost:8080/api/reporte-incendio');
+    const respuesta = await axios.get('http://localhost:8080/api/bff/reportes');
     // Ordenar para que los más recientes (ID más alto) salgan primero
     reportes.value = respuesta.data.sort((a, b) => b.id - a.id);
   } catch (err) {
@@ -33,8 +33,7 @@ const cargarReportes = async () => {
 
 const actualizarEstado = async (reporte) => {
   try {
-    // Se asume que tienes un endpoint PUT estándar en ReporteIncendioController
-    await axios.put(`http://localhost:8080/api/reporte-incendio/${reporte.id}`, reporte);
+    await axios.put(`http://localhost:8080/api/bff/reportes/${reporte.id}`, reporte);
     // Mostrar un pequeño feedback visual (opcional)
     console.log(`Reporte #${reporte.id} actualizado a ${reporte.estado}`);
   } catch (err) {
@@ -77,7 +76,7 @@ const enviarAlerta = async () => {
     };
 
     // Apuntamos al microservicio de alertas a través del Gateway
-    await axios.post('http://localhost:8080/api/alerta-emergencia', nuevaAlerta);
+    await axios.post('http://localhost:8080/api/bff/alertas', nuevaAlerta);
     
     alert("¡Alerta emitida exitosamente a la comunidad!");
     cerrarModal();

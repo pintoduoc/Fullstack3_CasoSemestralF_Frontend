@@ -34,7 +34,7 @@ const inicializarMapa = async () => {
     }).addTo(mapa);
 
     // 3. Consumir el API Gateway para obtener los reportes
-    const respuesta = await axios.get('http://localhost:8080/api/reporte-incendio');
+    const respuesta = await axios.get('http://localhost:8080/api/bff/reportes');
     reportes.value = respuesta.data;
 
     // 4. Dibujar los puntos en el mapa

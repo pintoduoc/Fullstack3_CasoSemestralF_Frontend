@@ -48,34 +48,27 @@ const cargarEstadisticas = async () => {
     cargando.value = true;
     error.value = '';
     
-    const respuesta = await axios.get('http://localhost:8080/api/reporte-incendio');
-    const reportes = respuesta.data;
+    // Llamamos al BFF que ya trae los datos calculados
+    const respuesta = await axios.get('http://localhost:8080/api/bff/dashboard/estadisticas');
+    const datos = respuesta.data;
     
-    totalReportes.value = reportes.length;
+    totalReportes.value = datos.total;
 
-    // Reiniciamos contadores
-    let p = 0, c = 0, ct = 0, e = 0;
+    // Asignamos directamente los valores del backend
+    stats.value = { 
+      pendientes: datos.pendientes, 
+      enCombate: datos.enCombate, 
+      controlados: datos.controlados, 
+      extinguidos: datos.extinguidos 
+    };
 
-    // Clasificamos los reportes
-    reportes.forEach(reporte => {
-      switch (reporte.estado) {
-        case 'PENDIENTE': p++; break;
-        case 'EN_COMBATE': c++; break;
-        case 'CONTROLADO': ct++; break;
-        case 'EXTINGUIDO': e++; break;
-      }
-    });
-
-    // Actualizamos las tarjetas
-    stats.value = { pendientes: p, enCombate: c, controlados: ct, extinguidos: e };
-
-    // Actualizamos el gráfico (Re-asignamos el objeto para que Vue detecte el cambio)
+    // Actualizamos el gráfico
     chartData.value = {
       ...chartData.value,
       datasets: [
         {
           backgroundColor: chartData.value.datasets[0].backgroundColor,
-          data: [p, c, ct, e]
+          data: [datos.pendientes, datos.enCombate, datos.controlados, datos.extinguidos]
         }
       ]
     };

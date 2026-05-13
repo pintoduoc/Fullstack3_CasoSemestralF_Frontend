@@ -37,7 +37,7 @@ const iniciarSesion = async () => {
     mensajeError.value = '';
 
     // Asumiendo que tu endpoint de búsqueda en UsuarioController es /api/usuario/rut/{rut}
-    const respuesta = await axios.get(`http://localhost:8080/api/usuario/rut/${formulario.value.rut}`);
+    const respuesta = await axios.get(`http://localhost:8080/api/bff/login/${rut.value}`);
     const usuario = respuesta.data;
 
     if (!usuario) {
