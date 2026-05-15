@@ -37,7 +37,7 @@ const iniciarSesion = async () => {
     mensajeError.value = '';
 
     // Asumiendo que tu endpoint de búsqueda en UsuarioController es /api/usuario/rut/{rut}
-    const respuesta = await axios.get(`http://localhost:8080/api/bff/login/${rut.value}`);
+    const respuesta = await axios.get(`/api/bff/login/${rut.value}`);
     const usuario = respuesta.data;
 
     if (!usuario) {
@@ -88,7 +88,7 @@ const registrarUsuario = async () => {
     };
 
     // Llamada POST al API Gateway para crear el usuario
-    const respuesta = await axios.post('http://localhost:8080/api/usuario', nuevoUsuario);
+    const respuesta = await axios.post('/api/usuario', nuevoUsuario);
     
     // Guardamos la sesión y redirigimos directamente a la vista de ciudadano
     localStorage.setItem('usuarioActivo', JSON.stringify(respuesta.data));

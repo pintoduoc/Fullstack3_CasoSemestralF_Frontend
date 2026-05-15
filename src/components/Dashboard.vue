@@ -49,7 +49,7 @@ const cargarEstadisticas = async () => {
     error.value = '';
     
     // Llamamos al BFF que ya trae los datos calculados
-    const respuesta = await axios.get('http://localhost:8080/api/bff/dashboard/estadisticas');
+    const respuesta = await axios.get('/api/bff/dashboard/estadisticas');
     const datos = respuesta.data;
     
     totalReportes.value = datos.total;

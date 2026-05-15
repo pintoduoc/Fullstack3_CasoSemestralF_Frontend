@@ -12,7 +12,7 @@ const obtenerAlertas = async () => {
   try {
     cargando.value = true;
     // Apuntamos al puerto 8080 del Gateway
-    const respuesta = await axios.get('http://localhost:8080/api/bff/alertas');
+    const respuesta = await axios.get('/api/bff/alertas');
     // Ordenamos las alertas por fecha (más reciente primero)
     alertas.value = respuesta.data.sort((a, b) => 
       new Date(b.fechaEmision) - new Date(a.fechaEmision)

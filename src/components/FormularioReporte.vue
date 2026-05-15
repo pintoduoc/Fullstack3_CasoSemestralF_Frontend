@@ -55,7 +55,7 @@ const enviarReporte = async () => {
     mensajeExito.value = '';
 
     // Enviamos el POST al puerto 8080 del Gateway, que enrutará al 8081 (report-service)
-    await axios.post('http://localhost:8080/api/bff/reportes', formulario.value);
+    await axios.post('/api/bff/reportes', formulario.value);
 
     // Si tiene éxito, mostramos mensaje y limpiamos el formulario
     mensajeExito.value = "¡Emergencia reportada exitosamente! Los equipos de emergencia han sido notificados.";
