@@ -1,18 +1,52 @@
-## Requisitos previos a ejecucion:
-- Se debe tener en ejecucion todos los microservicios del backend (user-service, report-service, alert-service y api-gateway), el backend se encuentra en https://github.com/pintoduoc/Fullstack3_CasoSemestralF_Backend
+# Frontend - Sistema de Emergencias Valle del Sol
 
+Aplicación Vue 3 + Vite para la gestión de emergencias. Proporciona vistas para ciudadanos (reportar incidentes, ver mapa y alertas) y administradores/brigadistas (dashboard, gestión de reportes, emisión de alertas).
 
-## Pasos para ejecutar:
+## Requisitos
 
+- Node.js >= 20.19.0 o >= 22.12.0
+- Los microservicios del backend ejecutándose (ver `Fullstack3/docker-compose.yml`)
 
-### Instalar dependencias:
+## Instalación
 
 ```sh
 npm install
 ```
 
-### Compilar y lanzar proyecto localmente
+## Desarrollo local
 
 ```sh
 npm run dev
+```
+
+El frontend se conecta al API Gateway en `http://localhost:8080` mediante proxy de Vite.
+
+## Tests
+
+```sh
+npm test
+```
+
+### Tests incluidos
+
+| Archivo | Componente/Vista | Assertions clave |
+|---|---|---|
+| `MapaInteractivo.test.js` | MapaInteractivo | Loading, error, leyenda, `getColorPorEstado` |
+| `GestorReportes.test.js` | GestorReportes | Loading, error, tabla, modal, actualización |
+| `Dashboard.test.js` | Dashboard | Loading, error, KPIs, gráfico |
+| `AdminVista.test.js` | AdminVista | Navbar, badge, logout, secciones |
+| `CiudadanoVista.test.js` | CiudadanoVista | Navbar, logout, footer |
+| `Home.test.js` | Home | LoginRegistro, MuroAlertas, separador |
+
+## Docker
+
+```sh
+docker build -t frontend .
+docker run -p 80:80 frontend
+```
+
+O usando docker-compose desde el repositorio de orquestación:
+
+```bash
+docker compose up --build -d frontend
 ```
