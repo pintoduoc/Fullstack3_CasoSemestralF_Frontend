@@ -1,7 +1,8 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
+import { usuarioService } from '@/services/api';
+import { ejecutarValidacion } from '@/services/validacionStrategy';
 
 // Instancia del router para hacer las redirecciones
 const router = useRouter();
@@ -27,8 +28,9 @@ const toggleModo = () => {
 
 // Función principal de Inicio de Sesión
 const iniciarSesion = async () => {
-  if (!formulario.value.rut) {
-    mensajeError.value = 'Por favor, ingrese su RUT.';
+  const validacion = ejecutarValidacion('login', formulario.value);
+  if (!validacion.valido) {
+    mensajeError.value = validacion.errores[0];
     return;
   }
 
@@ -36,29 +38,23 @@ const iniciarSesion = async () => {
     cargando.value = true;
     mensajeError.value = '';
 
-    // Asumiendo que tu endpoint de búsqueda en UsuarioController es /api/usuario/rut/{rut}
-    const respuesta = await axios.get(`/api/bff/login/${rut.value}`);
-    const usuario = respuesta.data;
+    const usuario = await usuarioService.login(formulario.value.rut);
 
     if (!usuario) {
       mensajeError.value = 'Usuario no encontrado. Verifique su RUT o regístrese.';
       return;
     }
 
-    // Aquí iría la lógica para guardar el usuario en Pinia (estado global),
-    // pero por ahora lo guardaremos en localStorage para simular la sesión.
     localStorage.setItem('usuarioActivo', JSON.stringify(usuario));
 
-    // Redirección basada en el Rol
     if (usuario.rol === 'ADMINISTRADOR' || usuario.rol === 'BRIGADISTA') {
-      router.push('/admin'); // Redirige a AdminView
+      router.push('/admin');
     } else {
-      router.push('/ciudadano'); // Redirige a CitizenView
+      router.push('/ciudadano');
     }
 
   } catch (error) {
     console.error(error);
-    // Si el backend devuelve un 404 cuando no encuentra el usuario
     if (error.response && error.response.status === 404) {
       mensajeError.value = 'Usuario no encontrado. Por favor, regístrese.';
     } else {
@@ -71,8 +67,9 @@ const iniciarSesion = async () => {
 
 // Función principal de Registro
 const registrarUsuario = async () => {
-  if (!formulario.value.rut || !formulario.value.nombreCompleto) {
-    mensajeError.value = 'El RUT y el Nombre son obligatorios.';
+  const validacion = ejecutarValidacion('registro', formulario.value);
+  if (!validacion.valido) {
+    mensajeError.value = validacion.errores[0];
     return;
   }
 
@@ -84,14 +81,11 @@ const registrarUsuario = async () => {
       rut: formulario.value.rut,
       nombreCompleto: formulario.value.nombreCompleto,
       contacto: formulario.value.contacto,
-      rol: 'CIUDADANO' // Todo usuario nuevo desde el portal público es ciudadano
+      rol: 'CIUDADANO'
     };
 
-    // Llamada POST al API Gateway para crear el usuario
-    const respuesta = await axios.post('/api/usuario', nuevoUsuario);
-    
-    // Guardamos la sesión y redirigimos directamente a la vista de ciudadano
-    localStorage.setItem('usuarioActivo', JSON.stringify(respuesta.data));
+    const usuario = await usuarioService.registrar(nuevoUsuario);
+    localStorage.setItem('usuarioActivo', JSON.stringify(usuario));
     router.push('/ciudadano');
 
   } catch (error) {

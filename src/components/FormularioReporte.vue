@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
-import axios from 'axios';
+import { reporteService } from '@/services/api';
+import { ejecutarValidacion } from '@/services/validacionStrategy';
 
 // Estado del formulario mapeado a tu entidad ReporteIncendio
 const formulario = ref({
@@ -43,9 +44,9 @@ const obtenerMiUbicacion = () => {
 
 // Función para enviar los datos al API Gateway
 const enviarReporte = async () => {
-  // Validación básica
-  if (!formulario.value.descripcion || !formulario.value.latitud || !formulario.value.longitud) {
-    mensajeError.value = "La descripción y las coordenadas son obligatorias.";
+  const validacion = ejecutarValidacion('reporte', formulario.value);
+  if (!validacion.valido) {
+    mensajeError.value = validacion.errores[0];
     return;
   }
 
@@ -54,10 +55,8 @@ const enviarReporte = async () => {
     mensajeError.value = '';
     mensajeExito.value = '';
 
-    // Enviamos el POST al puerto 8080 del Gateway, que enrutará al 8081 (report-service)
-    await axios.post('/api/bff/reportes', formulario.value);
+    await reporteService.crear(formulario.value);
 
-    // Si tiene éxito, mostramos mensaje y limpiamos el formulario
     mensajeExito.value = "¡Emergencia reportada exitosamente! Los equipos de emergencia han sido notificados.";
     formulario.value = {
       descripcion: '',
@@ -67,7 +66,6 @@ const enviarReporte = async () => {
       estado: 'PENDIENTE'
     };
 
-    // Ocultar el mensaje de éxito después de 5 segundos
     setTimeout(() => {
       mensajeExito.value = '';
     }, 5000);

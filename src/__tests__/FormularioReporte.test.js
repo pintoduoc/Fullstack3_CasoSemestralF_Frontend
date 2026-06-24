@@ -19,12 +19,12 @@ describe('FormularioReporte', () => {
 
   it('shows validation error when submitting empty form', async () => {
     await wrapper.find('form').trigger('submit.prevent')
-    expect(wrapper.text()).toContain('La descripción y las coordenadas son obligatorias')
+    expect(wrapper.text()).toContain('obligatoria')
   })
 
   it('shows validation error when description is missing', async () => {
     await wrapper.find('form').trigger('submit.prevent')
-    expect(wrapper.find('.alerta-error').text()).toContain('obligatorias')
+    expect(wrapper.find('.alerta-error').text()).toContain('obligatoria')
   })
 
   it('disables submit button while loading', async () => {

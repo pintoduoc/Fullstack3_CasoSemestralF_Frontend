@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import { reporteService } from '@/services/api';
 // Importamos los elementos necesarios de Chart.js
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'vue-chartjs';
@@ -48,9 +48,7 @@ const cargarEstadisticas = async () => {
     cargando.value = true;
     error.value = '';
     
-    // Llamamos al BFF que ya trae los datos calculados
-    const respuesta = await axios.get('/api/bff/dashboard/estadisticas');
-    const datos = respuesta.data;
+    const datos = await reporteService.estadisticas();
     
     totalReportes.value = datos.total;
 

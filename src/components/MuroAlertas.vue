@@ -1,20 +1,17 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import { alertaService } from '@/services/api';
 
 // Estado reactivo para almacenar las alertas
 const alertas = ref([]);
 const cargando = ref(true);
 const error = ref(null);
 
-// Función para obtener las alertas desde el API Gateway
 const obtenerAlertas = async () => {
   try {
     cargando.value = true;
-    // Apuntamos al puerto 8080 del Gateway
-    const respuesta = await axios.get('/api/bff/alertas');
-    // Ordenamos las alertas por fecha (más reciente primero)
-    alertas.value = respuesta.data.sort((a, b) => 
+    const datos = await alertaService.listar();
+    alertas.value = datos.sort((a, b) =>
       new Date(b.fechaEmision) - new Date(a.fechaEmision)
     );
   } catch (err) {

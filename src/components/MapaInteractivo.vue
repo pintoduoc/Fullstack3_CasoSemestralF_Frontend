@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import { reporteService } from '@/services/api';
 import L from 'leaflet';
 // Es crucial importar el CSS de Leaflet para que el mapa no se vea desarmado
 import 'leaflet/dist/leaflet.css';
@@ -34,8 +34,7 @@ const inicializarMapa = async () => {
     }).addTo(mapa);
 
     // 3. Consumir el API Gateway para obtener los reportes
-    const respuesta = await axios.get('/api/bff/reportes');
-    reportes.value = respuesta.data;
+    reportes.value = await reporteService.listar();
 
     // 4. Dibujar los puntos en el mapa
     reportes.value.forEach(reporte => {

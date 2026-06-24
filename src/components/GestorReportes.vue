@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import { reporteService, alertaService } from '@/services/api';
 
 // --- ESTADOS PRINCIPALES ---
 const reportes = ref([]);
@@ -20,9 +20,8 @@ const formularioAlerta = ref({
 const cargarReportes = async () => {
   try {
     cargando.value = true;
-    const respuesta = await axios.get('/api/bff/reportes');
-    // Ordenar para que los más recientes (ID más alto) salgan primero
-    reportes.value = respuesta.data.sort((a, b) => b.id - a.id);
+    const datos = await reporteService.listar();
+    reportes.value = datos.sort((a, b) => b.id - a.id);
   } catch (err) {
     console.error("Error al cargar reportes:", err);
     error.value = "No se pudieron cargar los reportes. Verifique la conexión.";
@@ -33,8 +32,7 @@ const cargarReportes = async () => {
 
 const actualizarEstado = async (reporte) => {
   try {
-    await axios.put(`/api/bff/reportes/${reporte.id}`, reporte);
-    // Mostrar un pequeño feedback visual (opcional)
+    await reporteService.actualizar(reporte.id, reporte);
     console.log(`Reporte #${reporte.id} actualizado a ${reporte.estado}`);
   } catch (err) {
     console.error("Error al actualizar estado:", err);
@@ -75,8 +73,7 @@ const enviarAlerta = async () => {
       nivelRiesgo: formularioAlerta.value.nivelRiesgo
     };
 
-    // Apuntamos al microservicio de alertas a través del Gateway
-    await axios.post('/api/bff/alertas', nuevaAlerta);
+    await alertaService.crear(nuevaAlerta);
     
     alert("¡Alerta emitida exitosamente a la comunidad!");
     cerrarModal();
