@@ -21,6 +21,11 @@ npm run dev
 
 El frontend se conecta al API Gateway en `http://localhost:8080` mediante proxy de Vite.
 
+## Patrones de Diseño
+
+1. **Repository / Service Layer**: `src/services/api.js` encapsula llamadas HTTP en servicios (`reporteService`, `alertaService`, `usuarioService`), desacoplando la lógica de red de los componentes Vue.
+2. **Strategy**: `src/services/validacionStrategy.js` define estrategias de validación (`login`, `registro`, `reporte`) con interfaz común y contexto (`ejecutarValidacion`) que selecciona la estrategia según el formulario.
+
 ## Tests
 
 ```sh
