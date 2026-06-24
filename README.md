@@ -36,7 +36,11 @@ npm test
 | `Dashboard.test.js` | Dashboard | Loading, error, KPIs, gráfico |
 | `AdminVista.test.js` | AdminVista | Navbar, badge, logout, secciones |
 | `CiudadanoVista.test.js` | CiudadanoVista | Navbar, logout, footer |
+| `LoginRegistro.test.js` | LoginRegistro | Modos login/registro, validación, toggle |
+| `FormularioReporte.test.js` | FormularioReporte | Validación, submit, geolocalización |
+| `MuroAlertas.test.js` | MuroAlertas | Loading, error, alertas, niveles de riesgo |
 | `Home.test.js` | Home | LoginRegistro, MuroAlertas, separador |
+| `setup.js` | — | Mock global de `localStorage` para Node 26 |
 
 ## Docker
 
