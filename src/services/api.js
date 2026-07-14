@@ -15,5 +15,5 @@ export const alertaService = {
 
 export const usuarioService = {
   login: (rut) => axios.get(`/api/bff/login/${rut}`).then(r => r.data),
-  registrar: (usuario) => axios.post('/api/usuario', usuario).then(r => r.data),
+  registrar: (usuario) => axios.post('/api/bff/usuarios', usuario).then(r => r.data),
 }
